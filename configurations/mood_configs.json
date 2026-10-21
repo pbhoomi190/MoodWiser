@@ -1,0 +1,318 @@
+{
+  "feelings": [
+    {
+      "name": "Joyful",
+      "color": "#FBBF24"
+    },
+    {
+      "name": "Grateful",
+      "color": "#F472B6"
+    },
+    {
+      "name": "Calm",
+      "color": "#34D399"
+    },
+    {
+      "name": "Peaceful",
+      "color": "#10B981"
+    },
+    {
+      "name": "Grounded",
+      "color": "#0D9488"
+    },
+    {
+      "name": "Accomplished",
+      "color": "#059669"
+    },
+    {
+      "name": "Confident",
+      "color": "#6366F1"
+    },
+    {
+      "name": "Inspired",
+      "color": "#8B5CF6"
+    },
+    {
+      "name": "Hopeful",
+      "color": "#F59E0B"
+    },
+    {
+      "name": "Energetic",
+      "color": "#F97316"
+    },
+    {
+      "name": "Loved",
+      "color": "#EC4899"
+    },
+    {
+      "name": "Playful",
+      "color": "#FB7185"
+    },
+    {
+      "name": "Validated",
+      "color": "#38BDF8"
+    },
+    {
+      "name": "Content",
+      "color": "#6EE7B7"
+    },
+    {
+      "name": "Anxious",
+      "color": "#A78BFA"
+    },
+    {
+      "name": "Overwhelmed",
+      "color": "#DC2626"
+    },
+    {
+      "name": "Burned Out",
+      "color": "#B91C1C"
+    },
+    {
+      "name": "Exhausted",
+      "color": "#78716C"
+    },
+    {
+      "name": "Restless",
+      "color": "#EA580C"
+    },
+    {
+      "name": "Behind",
+      "color": "#9333EA"
+    },
+    {
+      "name": "Insecure",
+      "color": "#C084FC"
+    },
+    {
+      "name": "Imposter Syndrome",
+      "color": "#7C3AED"
+    },
+    {
+      "name": "Guilty",
+      "color": "#BE123C"
+    },
+    {
+      "name": "Ashamed",
+      "color": "#881337"
+    },
+    {
+      "name": "Disconnected",
+      "color": "#64748B"
+    },
+    {
+      "name": "Lonely",
+      "color": "#475569"
+    },
+    {
+      "name": "Sad",
+      "color": "#60A5FA"
+    },
+    {
+      "name": "Grieving",
+      "color": "#3B82F6"
+    },
+    {
+      "name": "Frustrated",
+      "color": "#F87171"
+    },
+    {
+      "name": "Irritated",
+      "color": "#FB923C"
+    },
+    {
+      "name": "Angry",
+      "color": "#EF4444"
+    },
+    {
+      "name": "Resentful",
+      "color": "#991B1B"
+    },
+    {
+      "name": "Jealous",
+      "color": "#84CC16"
+    },
+    {
+      "name": "Numb",
+      "color": "#94A3B8"
+    },
+    {
+      "name": "Brain Fog",
+      "color": "#CBD5E1"
+    },
+    {
+      "name": "Confused",
+      "color": "#A1A1AA"
+    },
+    {
+      "name": "Vulnerable",
+      "color": "#E879F9"
+    },
+    {
+      "name": "Unappreciated",
+      "color": "#52525B"
+    },
+    {
+      "name": "Helpless",
+      "color": "#71717A"
+    },
+    {
+      "name": "Disappointed",
+      "color": "#6B7280"
+    }
+  ],
+  "triggers": [
+    {
+      "name": "Workload & Deadlines",
+      "color": "#2563EB"
+    },
+    {
+      "name": "Workplace Politics",
+      "color": "#1E40AF"
+    },
+    {
+      "name": "Micromanagement",
+      "color": "#3B82F6"
+    },
+    {
+      "name": "Career Uncertainty",
+      "color": "#60A5FA"
+    },
+    {
+      "name": "Money & Cost of Living",
+      "color": "#059669"
+    },
+    {
+      "name": "Debt & Bills",
+      "color": "#047857"
+    },
+    {
+      "name": "Savings & Investments",
+      "color": "#10B981"
+    },
+    {
+      "name": "Partner & Relationship",
+      "color": "#E11D48"
+    },
+    {
+      "name": "Dating & Modern Courtship",
+      "color": "#F43F5E"
+    },
+    {
+      "name": "Breakup or Rejection",
+      "color": "#BE123C"
+    },
+    {
+      "name": "Family Dynamics",
+      "color": "#DB2777"
+    },
+    {
+      "name": "Aging Parents",
+      "color": "#9D174D"
+    },
+    {
+      "name": "Friendship Shifts",
+      "color": "#06B6D4"
+    },
+    {
+      "name": "Ghosting & Mixed Signals",
+      "color": "#0891B2"
+    },
+    {
+      "name": "Feeling Excluded / FOMO",
+      "color": "#8B5CF6"
+    },
+    {
+      "name": "Social Media Scrolling",
+      "color": "#7C3AED"
+    },
+    {
+      "name": "Milestone Pressure",
+      "color": "#9333EA"
+    },
+    {
+      "name": "Body Image & Appearance",
+      "color": "#F472B6"
+    },
+    {
+      "name": "Physical Health & Symptoms",
+      "color": "#16A34A"
+    },
+    {
+      "name": "Hormones & Menstrual Cycle",
+      "color": "#FDA4AF"
+    },
+    {
+      "name": "Poor Sleep & Fatigue",
+      "color": "#6366F1"
+    },
+    {
+      "name": "Diet & Nutrition",
+      "color": "#65A30D"
+    },
+    {
+      "name": "Screen Time & Digital Fatigue",
+      "color": "#475569"
+    },
+    {
+      "name": "Unread Messages & Inbox",
+      "color": "#64748B"
+    },
+    {
+      "name": "Sensory Overload & Noise",
+      "color": "#78716C"
+    },
+    {
+      "name": "Household Chores & Clutter",
+      "color": "#D97706"
+    },
+    {
+      "name": "Commute & Traffic",
+      "color": "#EA580C"
+    },
+    {
+      "name": "Travel & Logistics",
+      "color": "#F59E0B"
+    },
+    {
+      "name": "News & World Events",
+      "color": "#52525B"
+    },
+    {
+      "name": "Loneliness & Isolation",
+      "color": "#334155"
+    },
+    {
+      "name": "Unmet Expectations",
+      "color": "#9CA3AF"
+    },
+    {
+      "name": "Boundaries Being Crossed",
+      "color": "#B91C1C"
+    },
+    {
+      "name": "Creative Slump / Block",
+      "color": "#CA8A04"
+    },
+    {
+      "name": "Exercise & Movement",
+      "color": "#22C55E"
+    },
+    {
+      "name": "Time in Nature",
+      "color": "#15803D"
+    },
+    {
+      "name": "Quality Solitude",
+      "color": "#0D9488"
+    },
+    {
+      "name": "Hobbies & Downtime",
+      "color": "#FBBF24"
+    },
+    {
+      "name": "Receiving Praise / Support",
+      "color": "#F59E0B"
+    }
+  ]
+}

@@ -12,6 +12,8 @@
 - Keep Hive initialization and box access in `lib/core/database/hive_service.dart`; avoid direct Hive access from widgets.
 - When changing Hive models, preserve existing `typeId` and field indexes. Regenerate adapters with build_runner after model changes.
 - Keep widgets focused on presentation and move reusable persistence or domain logic out of `build` methods.
+- Extract common or reusable UI into separate widget classes, keeping `build` methods concise and avoiding deeply nested or overly complex widget trees. Prefer composing small, focused widgets where practical.
+- Choose state management based on UI complexity: use streams and `StreamController` for simple UI updates, BLoC for event-driven state changes, and Riverpod for state shared across nested UI. Avoid `setState` when update logic is more than a trivial local change, and dispose stream controllers when their owner is disposed.
 
 ## Build and Test
 - Fetch dependencies with `flutter pub get`.

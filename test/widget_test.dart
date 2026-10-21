@@ -14,7 +14,7 @@ import 'package:mood_wiser/features/mood_tracking/domain/use_cases/save_mood_ent
 import 'package:mood_wiser/features/mood_tracking/presentation/pages/track_mood_page.dart';
 
 void main() {
-  testWidgets('saves the entered mood through the use case', (
+  testWidgets('saves selected mood options through the use case', (
     WidgetTester tester,
   ) async {
     final FakeMoodEntryRepository repository = FakeMoodEntryRepository();
@@ -24,8 +24,36 @@ void main() {
       MaterialApp(home: TrackMoodPage(saveMoodEntry: saveMoodEntry)),
     );
 
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Calm'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Calm'));
-    await tester.pump();
+    await tester.scrollUntilVisible(
+      find.text('Grateful'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Grateful'));
+    await tester.scrollUntilVisible(
+      find.text('Workload & Deadlines'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Workload & Deadlines'));
+    await tester.scrollUntilVisible(
+      find.text('Workplace Politics'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Workplace Politics'));
+    await tester.scrollUntilVisible(
+      find.byType(TextFormField),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.enterText(find.byType(TextFormField).first, 'A quiet walk');
     await tester.scrollUntilVisible(
       find.text(AppStrings.saveMood),
@@ -36,8 +64,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(repository.savedEntry, isNotNull);
-    expect(repository.savedEntry!.feeling, 'Calm');
-    expect(repository.savedEntry!.trigger, 'A quiet walk');
+    expect(repository.savedEntry!.feeling, 'Grateful, Calm');
+    expect(
+      repository.savedEntry!.trigger,
+      'Workload & Deadlines, Workplace Politics',
+    );
     expect(repository.savedEntry!.score, 5);
     expect(find.text(AppStrings.savedMessage), findsOneWidget);
   });
