@@ -1,7 +1,7 @@
 name: Email commit message
 
 on:
-  push:
+  pull_request:
     branches:
       - "**"
 
