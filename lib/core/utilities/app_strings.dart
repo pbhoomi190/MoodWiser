@@ -4,8 +4,10 @@ abstract final class AppStrings {
   static const String trackMoodTitle = 'Track your mood';
   static const String trackMoodSubtitle = 'A small check-in with yourself.';
   static const String feelingLabel = 'What are you feeling?';
+  static const String feelingOtherHint = 'Add another feeling (optional)';
   static const String scoreLabel = 'How good or bad are you feeling?';
   static const String triggerLabel = 'What brought this on?';
+  static const String triggerOtherHint = 'Add another trigger (optional)';
   static const String noteLabel = 'Add a note';
   static const String noteHint = 'Anything else you want to remember?';
   static const String dateLabel = 'When did you feel this?';
@@ -18,4 +20,6 @@ abstract final class AppStrings {
   static const String retry = 'Retry';
   static const String savedMessage = 'Mood saved';
   static const String saveErrorMessage = 'Could not save your mood. Try again.';
+  static const String feelingAndTriggerRequired =
+      'Enter your feeling and its trigger.';
 }

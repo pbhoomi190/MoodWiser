@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mood_wiser/core/utilities/app_colors.dart';
+import 'package:mood_wiser/core/utilities/app_spacing.dart';
 import 'package:mood_wiser/core/utilities/app_strings.dart';
 import 'package:mood_wiser/features/mood_tracking/data/models/mood_config.dart';
 import 'package:mood_wiser/features/mood_tracking/domain/use_cases/save_mood_entry.dart';
@@ -21,10 +22,14 @@ final class TrackMoodPage extends StatefulWidget {
 
 final class _TrackMoodPageState extends State<TrackMoodPage> {
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _feelingController = TextEditingController();
+  final TextEditingController _triggerController = TextEditingController();
 
   @override
   void dispose() {
     _noteController.dispose();
+    _feelingController.dispose();
+    _triggerController.dispose();
     super.dispose();
   }
 
@@ -40,9 +45,25 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
           final String? message = switch (state.saveStatus) {
             MoodSaveStatus.saved => AppStrings.savedMessage,
             MoodSaveStatus.failure => AppStrings.saveErrorMessage,
+            MoodSaveStatus.validationFailure =>
+              AppStrings.feelingAndTriggerRequired,
             _ => null,
           };
           if (message != null) {
+            if (state.saveStatus == MoodSaveStatus.validationFailure) {
+              context.read<TrackMoodBloc>().add(
+                const TrackMoodValidationAcknowledged(),
+              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(message)));
+              return;
+            }
+            if (state.saveStatus == MoodSaveStatus.saved) {
+              _feelingController.clear();
+              _triggerController.clear();
+              _noteController.clear();
+            }
             // After save result reset the state to initial state so that user can track mood again.
             context.read<TrackMoodBloc>().add(const TrackMoodReset());
             ScaffoldMessenger.of(
@@ -63,7 +84,12 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
               body: SafeArea(
                 top: false,
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.xlg,
+                    AppSpacing.md,
+                    AppSpacing.xlg,
+                    AppSpacing.xxlg,
+                  ),
                   children: <Widget>[
                     Text(
                       AppStrings.trackMoodTitle,
@@ -73,16 +99,16 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
                             fontWeight: FontWeight.w700,
                           ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       AppStrings.trackMoodSubtitle,
                       style: Theme.of(
                         context,
                       ).textTheme.bodyLarge?.copyWith(color: AppColors.muted),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.xlg),
                     _buildScoreSection(context, state),
-                    const SizedBox(height: 26),
+                    const SizedBox(height: AppSpacing.xlg),
                     if (state.optionsStatus != MoodOptionsStatus.loaded ||
                         config == null)
                       _buildConfigStatus(context, state)
@@ -97,7 +123,12 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
                             .read<TrackMoodBloc>()
                             .add(TrackMoodFeelingToggled(name)),
                       ),
-                      const SizedBox(height: 26),
+                      const SizedBox(height: AppSpacing.md),
+                      _buildCustomOptionField(
+                        controller: _feelingController,
+                        hintText: AppStrings.feelingOtherHint,
+                      ),
+                      const SizedBox(height: AppSpacing.xlg),
                       _buildOptionSection(
                         context: context,
                         label: AppStrings.triggerLabel,
@@ -108,12 +139,17 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
                             .read<TrackMoodBloc>()
                             .add(TrackMoodTriggerToggled(name)),
                       ),
+                      const SizedBox(height: AppSpacing.md),
+                      _buildCustomOptionField(
+                        controller: _triggerController,
+                        hintText: AppStrings.triggerOtherHint,
+                      ),
                     ],
-                    const SizedBox(height: 22),
+                    const SizedBox(height: AppSpacing.xlg),
                     _buildNoteSection(context),
-                    const SizedBox(height: 22),
+                    const SizedBox(height: AppSpacing.xlg),
                     _sectionLabel(context, AppStrings.dateLabel),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.md),
                     OutlinedButton.icon(
                       onPressed: () => _chooseDateTime(context, state.date),
                       icon: const Icon(Icons.calendar_today_outlined, size: 18),
@@ -123,15 +159,15 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
                         foregroundColor: AppColors.ink,
                         side: const BorderSide(color: AppColors.line),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 15,
+                          horizontal: AppSpacing.lg,
+                          vertical: AppSpacing.lg,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: AppSpacing.xlg),
                     FilledButton(
                       onPressed:
                           state.saveStatus == MoodSaveStatus.saving ||
@@ -141,7 +177,9 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.surface,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.lg,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -171,9 +209,14 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _sectionLabel(context, AppStrings.scoreLabel),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.sm),
         Container(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.md,
+            AppSpacing.lg,
+            AppSpacing.md,
+          ),
           decoration: BoxDecoration(
             color: AppColors.softCoral,
             borderRadius: BorderRadius.circular(14),
@@ -229,7 +272,7 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _sectionLabel(context, label),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         MoodOptionChipGroup(
           options: options,
           selectedOptions: selectedOptions,
@@ -264,7 +307,7 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _sectionLabel(context, AppStrings.noteLabel),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.md),
         TextFormField(
           controller: _noteController,
           minLines: 3,
@@ -278,6 +321,19 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildCustomOptionField({
+    required TextEditingController controller,
+    required String hintText,
+  }) {
+    return TextFormField(
+      controller: controller,
+      maxLength: 100,
+      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: InputDecoration(hintText: hintText),
     );
   }
 
@@ -332,7 +388,11 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
 
   void _save(BuildContext context) {
     context.read<TrackMoodBloc>().add(
-      TrackMoodSaveRequested(_noteController.text),
+      TrackMoodSaveRequested(
+        _noteController.text,
+        customFeeling: _feelingController.text,
+        customTrigger: _triggerController.text,
+      ),
     );
   }
 }
