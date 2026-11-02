@@ -2,7 +2,7 @@ import 'package:mood_wiser/features/mood_tracking/data/models/mood_config.dart';
 
 enum MoodOptionsStatus { loading, loaded, failure }
 
-enum MoodSaveStatus { idle, saving, saved, failure }
+enum MoodSaveStatus { idle, saving, saved, failure, validationFailure }
 
 /// Represents the state of the mood tracking feature,
 /// including the loaded mood configuration, selected options, score, date, and save status.
@@ -12,7 +12,7 @@ final class TrackMoodState {
   TrackMoodState({
     this.moodConfig,
     this.optionsStatus = MoodOptionsStatus.loading,
-    this.score = 5,
+    this.score = 1,
     Set<String> selectedFeelings = const <String>{},
     Set<String> selectedTriggers = const <String>{},
     DateTime? date,

@@ -31,11 +31,21 @@ final class TrackMoodDateChanged extends TrackMoodEvent {
 }
 
 final class TrackMoodSaveRequested extends TrackMoodEvent {
-  const TrackMoodSaveRequested(this.note);
+  const TrackMoodSaveRequested(
+    this.note, {
+    this.customFeeling = '',
+    this.customTrigger = '',
+  });
 
   final String note;
+  final String customFeeling;
+  final String customTrigger;
 }
 
 final class TrackMoodReset extends TrackMoodEvent {
   const TrackMoodReset();
+}
+
+final class TrackMoodValidationAcknowledged extends TrackMoodEvent {
+  const TrackMoodValidationAcknowledged();
 }

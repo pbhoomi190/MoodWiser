@@ -17,6 +17,7 @@ final class TrackMoodBloc extends Bloc<TrackMoodEvent, TrackMoodState> {
     on<TrackMoodDateChanged>(_onDateChanged);
     on<TrackMoodSaveRequested>(_onSaveRequested);
     on<TrackMoodReset>(_onReset);
+    on<TrackMoodValidationAcknowledged>(_onValidationAcknowledged);
     add(const TrackMoodConfigRequested());
   }
 
@@ -59,6 +60,9 @@ final class TrackMoodBloc extends Bloc<TrackMoodEvent, TrackMoodState> {
     TrackMoodFeelingToggled event,
     Emitter<TrackMoodState> emit,
   ) {
+    // Create a new set of selected feelings based on the current state 
+    // and the toggled feeling. 
+    // the ... operator is used to create a new set that contains all the elements of the current selectedFeelings set.
     final Set<String> feelings = <String>{...state.selectedFeelings};
     if (!feelings.add(event.feeling)) {
       feelings.remove(event.feeling);
@@ -102,19 +106,26 @@ final class TrackMoodBloc extends Bloc<TrackMoodEvent, TrackMoodState> {
       return;
     }
 
+    final String feeling = _appendCustomText(
+      _joinSelections(config.feelings, submittedState.selectedFeelings),
+      event.customFeeling,
+    );
+    final String trigger = _appendCustomText(
+      _joinSelections(config.triggers, submittedState.selectedTriggers),
+      event.customTrigger,
+    );
+    if (feeling.isEmpty || trigger.isEmpty) {
+      emit(state.copyWith(saveStatus: MoodSaveStatus.validationFailure));
+      return;
+    }
+
     emit(state.copyWith(saveStatus: MoodSaveStatus.saving));
     try {
       final String trimmedNote = event.note.trim();
       await _saveMoodEntry(
         score: submittedState.score,
-        feeling: _joinSelections(
-          config.feelings,
-          submittedState.selectedFeelings,
-        ),
-        trigger: _joinSelections(
-          config.triggers,
-          submittedState.selectedTriggers,
-        ),
+        feeling: feeling,
+        trigger: trigger,
         note: trimmedNote.isEmpty ? null : trimmedNote,
         date: submittedState.date,
       );
@@ -141,11 +152,29 @@ final class TrackMoodBloc extends Bloc<TrackMoodEvent, TrackMoodState> {
     ));
   }
 
+  void _onValidationAcknowledged(
+    TrackMoodValidationAcknowledged event,
+    Emitter<TrackMoodState> emit,
+  ) {
+    emit(state.copyWith(saveStatus: MoodSaveStatus.idle));
+  }
+
   String _joinSelections(List<MoodOption> options, Set<String> selected) {
     return options
         .where((MoodOption option) => selected.contains(option.name))
         .map((MoodOption option) => option.name)
         .join(', ');
+  }
+
+  String _appendCustomText(String selections, String customText) {
+    final String trimmedCustomText = customText.trim();
+    if (trimmedCustomText.isEmpty) {
+      return selections;
+    }
+    if (selections.isEmpty) {
+      return trimmedCustomText;
+    }
+    return '$selections, $trimmedCustomText';
   }
 
 }
