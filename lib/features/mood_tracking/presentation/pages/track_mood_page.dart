@@ -9,6 +9,7 @@ import 'package:mood_wiser/features/mood_tracking/domain/use_cases/save_mood_ent
 import 'package:mood_wiser/features/mood_tracking/presentation/bloc/track_mood_bloc.dart';
 import 'package:mood_wiser/features/mood_tracking/presentation/bloc/track_mood_event.dart';
 import 'package:mood_wiser/features/mood_tracking/presentation/bloc/track_mood_state.dart';
+import 'package:mood_wiser/features/mood_tracking/presentation/pages/mood_analysis_page.dart';
 import 'package:mood_wiser/features/mood_tracking/presentation/widgets/mood_option_chip_group.dart';
 
 final class TrackMoodPage extends StatefulWidget {
@@ -80,6 +81,19 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
               appBar: AppBar(
                 title: const Text(AppStrings.appTitle),
                 centerTitle: false,
+                actions: <Widget>[
+                  IconButton(
+                    tooltip: AppStrings.analyzeMood,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const MoodAnalysisPage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.insights_outlined),
+                  ),
+                ],
               ),
               body: SafeArea(
                 top: false,

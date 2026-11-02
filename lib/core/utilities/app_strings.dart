@@ -22,4 +22,30 @@ abstract final class AppStrings {
   static const String saveErrorMessage = 'Could not save your mood. Try again.';
   static const String feelingAndTriggerRequired =
       'Enter your feeling and its trigger.';
+  static const String analyzeMood = 'Analyze mood';
+  static const String moodAnalysisTitle = 'Mood insights';
+  static const String moodAnalysisSubtitle =
+      'A snapshot of your emotional wellbeing.';
+  static const String weekly = 'Weekly';
+  static const String monthly = 'Monthly';
+  static const String yearly = 'Yearly';
+  static const String averageMood = 'Average mood';
+  static const String outOfTen = '/ 10';
+  static const String moodTrend = 'Mood trend';
+  static const String frequentFeelings = 'Frequent feelings';
+  static const String frequentTriggers = 'Helpful triggers';
+  static const String whatHelps = 'What you can do';
+  static const String positiveMoodTitle = 'You’ve been feeling good!';
+  static const String positiveMoodMessage =
+      'Calm and gratitude, along with time outdoors and with people you care '
+      'about, seem to support your mood. Keep making space for what you enjoy.';
+  static const String feelingInsight =
+      'Calm, grateful, and hopeful show up most often.';
+  static const String triggerInsight =
+      'Time with friends, outdoor walks, and restful sleep.';
+  static const String wellnessSuggestion =
+      'Keep a little time for connection, fresh air, and rest in your routine.';
+  static const String difficultDaySuggestion =
+      'On harder days, try a short walk, a few slow breaths, or reaching out '
+      'to someone you trust.';
 }
