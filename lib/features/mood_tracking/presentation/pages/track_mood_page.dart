@@ -5,6 +5,7 @@ import 'package:mood_wiser/core/utilities/app_colors.dart';
 import 'package:mood_wiser/core/utilities/app_spacing.dart';
 import 'package:mood_wiser/core/utilities/app_strings.dart';
 import 'package:mood_wiser/features/mood_tracking/data/models/mood_config.dart';
+import 'package:mood_wiser/features/mood_tracking/domain/use_cases/analyze_mood_entries.dart';
 import 'package:mood_wiser/features/mood_tracking/domain/use_cases/save_mood_entry.dart';
 import 'package:mood_wiser/features/mood_tracking/presentation/bloc/track_mood_bloc.dart';
 import 'package:mood_wiser/features/mood_tracking/presentation/bloc/track_mood_event.dart';
@@ -13,9 +14,15 @@ import 'package:mood_wiser/features/mood_tracking/presentation/pages/mood_analys
 import 'package:mood_wiser/features/mood_tracking/presentation/widgets/mood_option_chip_group.dart';
 
 final class TrackMoodPage extends StatefulWidget {
-  const TrackMoodPage({super.key, required this.saveMoodEntry});
+  const TrackMoodPage({
+    super.key,
+    required this.saveMoodEntry,
+    required this.analyzeMoodEntries,
+  });
 
+  // Use case for saving a mood entry.
   final SaveMoodEntry saveMoodEntry;
+  final AnalyzeMoodEntries analyzeMoodEntries;
 
   @override
   State<TrackMoodPage> createState() => _TrackMoodPageState();
@@ -87,7 +94,9 @@ final class _TrackMoodPageState extends State<TrackMoodPage> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute<void>(
-                          builder: (_) => const MoodAnalysisPage(),
+                          builder: (_) => MoodAnalysisPage(
+                            analyzeMoodEntries: widget.analyzeMoodEntries,
+                          ),
                         ),
                       );
                     },

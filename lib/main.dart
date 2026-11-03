@@ -3,6 +3,8 @@ import 'package:mood_wiser/core/initialization/initial_setup.dart';
 import 'package:mood_wiser/core/utilities/app_colors.dart';
 import 'package:mood_wiser/features/mood_tracking/data/data_sources/hive_mood_entry_local_data_source.dart';
 import 'package:mood_wiser/features/mood_tracking/data/repositories/mood_entry_repository_impl.dart';
+import 'package:mood_wiser/features/mood_tracking/domain/services/mood_analyzer.dart';
+import 'package:mood_wiser/features/mood_tracking/domain/use_cases/analyze_mood_entries.dart';
 import 'package:mood_wiser/features/mood_tracking/domain/use_cases/save_mood_entry.dart';
 import 'package:mood_wiser/features/mood_tracking/presentation/pages/track_mood_page.dart';
 
@@ -11,13 +13,24 @@ Future<void> main() async {
   await InitialSetup.instance.init();
   final localDataSource = HiveMoodEntryLocalDataSource();
   final repository = MoodEntryRepositoryImpl(localDataSource);
-  runApp(MyApp(saveMoodEntry: SaveMoodEntry(repository)));
+  runApp(
+    MyApp(
+      // Dependency injection
+      saveMoodEntry: SaveMoodEntry(repository),
+      analyzeMoodEntries: AnalyzeMoodEntries(repository, MoodAnalyzer()),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.saveMoodEntry});
+  const MyApp({
+    super.key,
+    required this.saveMoodEntry,
+    required this.analyzeMoodEntries,
+  });
 
   final SaveMoodEntry saveMoodEntry;
+  final AnalyzeMoodEntries analyzeMoodEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +66,10 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: TrackMoodPage(saveMoodEntry: saveMoodEntry),
+      home: TrackMoodPage(
+        saveMoodEntry: saveMoodEntry,
+        analyzeMoodEntries: analyzeMoodEntries,
+      ),
     );
   }
 }

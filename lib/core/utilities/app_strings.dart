@@ -34,6 +34,18 @@ abstract final class AppStrings {
   static const String moodTrend = 'Mood trend';
   static const String frequentFeelings = 'Frequent feelings';
   static const String frequentTriggers = 'Helpful triggers';
+  static const String positiveCatalysts = 'Positive catalysts';
+  static const String negativeFriction = 'Negative mood shifts';
+  static const String noSignificantTriggers =
+      'No triggers crossed the impact threshold in this timeframe.';
+  static const String noFeelingData = 'No feeling data for this timeframe.';
+  static const String noOutliers = 'No entries to show for this timeframe.';
+  static const String analysisLoadError =
+      'Could not load mood analysis. Please try again.';
+  static const String analysisPayload = 'Analysis JSON';
+  static const String totalEntries = 'Entries';
+  static const String volatility = 'Volatility';
+  static const String outlierSamples = 'High and low mood entries';
   static const String whatHelps = 'What you can do';
   static const String positiveMoodTitle = 'You’ve been feeling good!';
   static const String positiveMoodMessage =
