@@ -4,9 +4,11 @@ import 'package:mood_wiser/features/mood_tracking/domain/entities/mood_analysis.
 import 'package:mood_wiser/features/mood_tracking/domain/entities/mood_entry.dart';
 
 final class MoodAnalyzer {
+  // Only classify a trigger when its average mood differs by more than 1 point.
   static const double _positiveImpactThreshold = 1;
   static const double _negativeImpactThreshold = -1;
-  static const int _outlierCount = 3;
+  // Include up to three of the lowest and three of the highest mood entries.
+  static const int _highlightCount = 3;
 
   MoodAnalysis analyze({
     required List<MoodEntry> entries,
@@ -14,12 +16,7 @@ final class MoodAnalyzer {
     DateTime? now,
   }) {
     final DateTime today = now ?? DateTime.now();
-    final DateTime endExclusive = DateTime(
-      today.year,
-      today.month,
-      today.day + 1,
-    );
-    final DateTime startInclusive = DateTime(
+    final DateTime startDate = DateTime(
       today.year,
       today.month,
       today.day - period.days + 1,
@@ -27,10 +24,14 @@ final class MoodAnalyzer {
     final List<MoodEntry> selectedEntries = entries
         .where(
           (MoodEntry entry) =>
-              !entry.date.isBefore(startInclusive) &&
-              entry.date.isBefore(endExclusive),
+              !entry.date.isBefore(startDate) &&
+              entry.date.isBefore(DateTime(
+      today.year,
+      today.month,
+      today.day + 1,
+    )),
         )
-        .toList(growable: false);
+        .toList(growable: false); // prevent further modifications to the list after filtering
 
     if (selectedEntries.isEmpty) {
       return MoodAnalysis(
@@ -42,20 +43,24 @@ final class MoodAnalyzer {
         positiveTriggers: const <MoodTriggerImpact>[],
         negativeTriggers: const <MoodTriggerImpact>[],
         topFeelings: const <String>[],
-        outlierSamples: const <MoodOutlierSample>[],
+        entryHighlights: const <MoodEntryHighlight>[],
       );
     }
 
+    // Map through each selected entry and get the score list, reduce will later start adding those scores to get the total score,
+    // then divide by the length of the list to get the average score.
     final double average =
         selectedEntries
             .map((MoodEntry entry) => entry.score)
             .reduce((int total, int score) => total + score) /
         selectedEntries.length;
+
     final double variance =
         selectedEntries
             .map((MoodEntry entry) => math.pow(entry.score - average, 2))
             .reduce((num total, num value) => total + value) /
         selectedEntries.length;
+        
     final Map<String, _TriggerStats> triggers = <String, _TriggerStats>{};
     final Map<String, _FeelingStats> feelings = <String, _FeelingStats>{};
 
@@ -134,7 +139,7 @@ final class MoodAnalyzer {
                 '${feeling.label} (${feeling.frequency}x)',
           )
           .toList(growable: false),
-      outlierSamples: _outlierSamples(selectedEntries),
+      entryHighlights: _entryHighlights(selectedEntries),
     );
   }
 
@@ -172,7 +177,7 @@ final class MoodAnalyzer {
     return numerator / denominator;
   }
 
-  List<MoodOutlierSample> _outlierSamples(List<MoodEntry> entries) {
+  List<MoodEntryHighlight> _entryHighlights(List<MoodEntry> entries) {
     final List<MoodEntry> lowest = entries.toList()
       ..sort((MoodEntry a, MoodEntry b) {
         final int byScore = a.score.compareTo(b.score);
@@ -183,11 +188,11 @@ final class MoodAnalyzer {
         final int byScore = b.score.compareTo(a.score);
         return byScore != 0 ? byScore : b.date.compareTo(a.date);
       });
-    final Set<MoodEntry> selected = <MoodEntry>{...lowest.take(_outlierCount)};
-    selected.addAll(highest.take(_outlierCount));
+    final Set<MoodEntry> selected = <MoodEntry>{...lowest.take(_highlightCount)};
+    selected.addAll(highest.take(_highlightCount));
     return selected
         .map(
-          (MoodEntry entry) => MoodOutlierSample(
+          (MoodEntry entry) => MoodEntryHighlight(
             date: entry.date,
             mood: entry.score,
             feelings: entry.feeling,

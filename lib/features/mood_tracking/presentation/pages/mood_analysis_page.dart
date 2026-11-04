@@ -81,22 +81,25 @@ final class _MoodAnalysisPageState extends State<MoodAnalysisPage> {
           const SizedBox(height: AppSpacing.lg),
           FutureBuilder<MoodAnalysis>(
             future: _analysis,
-            builder: (BuildContext context, AsyncSnapshot<MoodAnalysis> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasError) {
-                return _MessageCard(message: AppStrings.analysisLoadError);
-              }
-              final MoodAnalysis? analysis = snapshot.data;
-              if (analysis == null) {
-                return _MessageCard(message: AppStrings.analysisLoadError);
-              }
-              if (analysis.totalEntries == 0) {
-                return _MessageCard(message: AppStrings.noOutliers);
-              }
-              return _AnalysisResults(analysis: analysis);
-            },
+            builder:
+                (BuildContext context, AsyncSnapshot<MoodAnalysis> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return _MessageCard(message: AppStrings.analysisLoadError);
+                  }
+                  final MoodAnalysis? analysis = snapshot.data;
+                  if (analysis == null) {
+                    return _MessageCard(message: AppStrings.analysisLoadError);
+                  }
+                  if (analysis.totalEntries == 0) {
+                    return _MessageCard(
+                      message: AppStrings.noMoodEntryHighlights,
+                    );
+                  }
+                  return _AnalysisResults(analysis: analysis);
+                },
           ),
         ],
       ),
@@ -173,7 +176,7 @@ final class _AnalysisResults extends StatelessWidget {
           emptyMessage: AppStrings.noFeelingData,
         ),
         const SizedBox(height: AppSpacing.md),
-        _OutlierCard(samples: analysis.outlierSamples),
+        _MoodEntryHighlightsCard(samples: analysis.entryHighlights),
         const SizedBox(height: AppSpacing.md),
         _PayloadCard(payload: analysis.toJson()),
       ],
@@ -205,10 +208,10 @@ final class _TriggerImpactCard extends StatelessWidget {
   }
 }
 
-final class _OutlierCard extends StatelessWidget {
-  const _OutlierCard({required this.samples});
+final class _MoodEntryHighlightsCard extends StatelessWidget {
+  const _MoodEntryHighlightsCard({required this.samples});
 
-  final List<MoodOutlierSample> samples;
+  final List<MoodEntryHighlight> samples;
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +222,7 @@ final class _OutlierCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            AppStrings.outlierSamples,
+            AppStrings.moodEntryHighlights,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: AppColors.ink,
               fontWeight: FontWeight.w700,
@@ -228,13 +231,13 @@ final class _OutlierCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           if (samples.isEmpty)
             Text(
-              AppStrings.noOutliers,
+              AppStrings.noMoodEntryHighlights,
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: AppColors.muted),
             )
           else
-            ...samples.map((MoodOutlierSample sample) {
+            ...samples.map((MoodEntryHighlight sample) {
               final String date = MaterialLocalizations.of(
                 context,
               ).formatShortDate(sample.date);

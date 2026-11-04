@@ -38,8 +38,8 @@ abstract final class MoodAnalysisPayloadKeys {
   /// Lists the most frequent feelings.
   static const String topFeelings = 'top_feelings';
 
-  /// Groups the highest and lowest mood samples.
-  static const String outlierSamples = 'outlier_samples';
+  /// Groups highlighted entries; the payload key is retained for compatibility.
+  static const String entryHighlights = 'outlier_samples';
 
   /// Gives the sample's calendar date.
   static const String date = 'date';

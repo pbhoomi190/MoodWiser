@@ -11,9 +11,12 @@ enum MoodAnalysisPeriod {
 
   final int days;
 
+  // this will return the name of the enum value as a string, e.g., 'weekly', 'monthly', or 'yearly'.
   String get payloadName => name;
 }
 
+// This class represents the impact of a specific trigger on mood,
+// including its frequency and the change in mood associated with it.
 final class MoodTriggerImpact {
   const MoodTriggerImpact({
     required this.trigger,
@@ -35,8 +38,9 @@ final class MoodTriggerImpact {
       '${delta >= 0 ? '+' : ''}${delta.toStringAsFixed(1)}';
 }
 
-final class MoodOutlierSample {
-  const MoodOutlierSample({
+// A selected high or low scoring entry shown in mood analysis.
+final class MoodEntryHighlight {
+  const MoodEntryHighlight({
     required this.date,
     required this.mood,
     required this.feelings,
@@ -59,7 +63,19 @@ final class MoodOutlierSample {
   };
 }
 
+/// This class encapsulates the results of a mood analysis over a specified period.
+
+/// period - The timeframe over which the mood analysis was conducted (e.g., weekly, monthly, yearly).
+/// totalEntries - The total number of mood entries analyzed during the specified period.
+/// averageMood - The average mood score calculated from the analyzed entries, which may be null if insufficient data is available.
+/// standardDeviation - The standard deviation of mood scores, indicating the variability of mood during the analysis period
+/// slopePerDay - The calculated slope of mood scores over time, representing the trend in mood changes per day.
+/// positiveTriggers - A list of triggers that have a positive impact on mood, each represented by a MoodTriggerImpact object.
+/// negativeTriggers - A list of triggers that have a negative impact on mood, each represented by a MoodTriggerImpact object.
+/// topFeelings - A list of the most frequently reported feelings during the analysis period.
+/// entryHighlights - Selected high- and low-scoring mood entries.
 final class MoodAnalysis {
+  // used to determine if the slope is considered flat, indicating no significant trend in mood over time.
   static const double _flatTrendThreshold = 0.01;
 
   const MoodAnalysis({
@@ -71,7 +87,7 @@ final class MoodAnalysis {
     required this.positiveTriggers,
     required this.negativeTriggers,
     required this.topFeelings,
-    required this.outlierSamples,
+    required this.entryHighlights,
   });
 
   final MoodAnalysisPeriod period;
@@ -82,8 +98,9 @@ final class MoodAnalysis {
   final List<MoodTriggerImpact> positiveTriggers;
   final List<MoodTriggerImpact> negativeTriggers;
   final List<String> topFeelings;
-  final List<MoodOutlierSample> outlierSamples;
+  final List<MoodEntryHighlight> entryHighlights;
 
+  /// For example, `slopePerDay: 0.15` returns `upward (+0.15/day)`.
   String get trend {
     final double? slope = slopePerDay;
     if (slope == null) {
@@ -98,6 +115,7 @@ final class MoodAnalysis {
         '${slope.toStringAsFixed(2)}/day)';
   }
 
+  /// For example, `standardDeviation: 1.4` returns `moderate (std_dev: 1.4)`.
   String get volatility {
     final double? deviation = standardDeviation;
     if (deviation == null) {
@@ -111,6 +129,8 @@ final class MoodAnalysis {
     return '$level (std_dev: ${deviation.toStringAsFixed(1)})';
   }
 
+  /// Converts the MoodAnalysis object into a Map representation, suitable for serialization or further processing.
+  /// Later will use it to pass it to the local model or api for generating insights.
   Map<String, Object?> toMap() => <String, Object?>{
     MoodAnalysisPayloadKeys.timeframe: period.payloadName,
     MoodAnalysisPayloadKeys.totalEntries: totalEntries,
@@ -130,8 +150,8 @@ final class MoodAnalysis {
           .toList(growable: false),
     },
     MoodAnalysisPayloadKeys.topFeelings: topFeelings,
-    MoodAnalysisPayloadKeys.outlierSamples: outlierSamples
-        .map((MoodOutlierSample sample) => sample.toJson())
+    MoodAnalysisPayloadKeys.entryHighlights: entryHighlights
+        .map((MoodEntryHighlight sample) => sample.toJson())
         .toList(growable: false),
   };
 
