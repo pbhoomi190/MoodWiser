@@ -23,6 +23,10 @@ final class HiveService {
     return key;
   }
 
+  static List<MoodEntry> getMoodEntries() {
+    return _box.values.toList(growable: false);
+  }
+
   static Future<void> updateMoodEntry(int id, MoodEntry entry) async {
     entry.id = id;
     await _box.put(id, entry);

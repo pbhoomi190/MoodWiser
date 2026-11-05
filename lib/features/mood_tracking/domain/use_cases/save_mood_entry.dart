@@ -1,6 +1,7 @@
 import 'package:mood_wiser/features/mood_tracking/domain/entities/mood_entry.dart';
 import 'package:mood_wiser/features/mood_tracking/domain/repositories/mood_entry_repository.dart';
 
+// Use case for saving a mood entry.
 final class SaveMoodEntry {
   const SaveMoodEntry(this._repository);
 

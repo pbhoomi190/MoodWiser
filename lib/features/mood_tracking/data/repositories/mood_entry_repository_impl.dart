@@ -8,6 +8,11 @@ final class MoodEntryRepositoryImpl implements MoodEntryRepository {
   final HiveMoodEntryLocalDataSource _localDataSource;
 
   @override
+  Future<List<MoodEntry>> getAll() {
+    return _localDataSource.getAll();
+  }
+
+  @override
   Future<void> save(MoodEntry entry) {
     return _localDataSource.save(entry);
   }
