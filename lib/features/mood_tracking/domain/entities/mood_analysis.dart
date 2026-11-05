@@ -31,7 +31,7 @@ final class MoodTriggerImpact {
   Map<String, Object> toJson() => <String, Object>{
     MoodAnalysisPayloadKeys.trigger: trigger,
     MoodAnalysisPayloadKeys.frequency: frequency,
-    MoodAnalysisPayloadKeys.delta: deltaLabel,
+    MoodAnalysisPayloadKeys.delta: double.parse(delta.toStringAsFixed(1)),
   };
 
   String get deltaLabel =>
@@ -60,6 +60,13 @@ final class MoodEntryHighlight {
     MoodAnalysisPayloadKeys.feelings: feelings,
     MoodAnalysisPayloadKeys.trigger: trigger,
     MoodAnalysisPayloadKeys.note: note,
+  };
+
+  Map<String, Object> toAiMap() => <String, Object>{
+    MoodAnalysisPayloadKeys.date: _dateLabel(date),
+    MoodAnalysisPayloadKeys.mood: mood,
+    MoodAnalysisPayloadKeys.feelings: feelings,
+    MoodAnalysisPayloadKeys.trigger: trigger,
   };
 }
 
@@ -141,21 +148,31 @@ final class MoodAnalysis {
       MoodAnalysisPayloadKeys.trend: trend,
       MoodAnalysisPayloadKeys.volatility: volatility,
     },
-    MoodAnalysisPayloadKeys.correlations: <String, Object>{
-      MoodAnalysisPayloadKeys.positiveTriggers: positiveTriggers
-          .map((MoodTriggerImpact impact) => impact.toJson())
-          .toList(growable: false),
-      MoodAnalysisPayloadKeys.negativeTriggers: negativeTriggers
-          .map((MoodTriggerImpact impact) => impact.toJson())
-          .toList(growable: false),
-    },
+    MoodAnalysisPayloadKeys.correlations: _correlationsMap(),
     MoodAnalysisPayloadKeys.topFeelings: topFeelings,
     MoodAnalysisPayloadKeys.entryHighlights: entryHighlights
         .map((MoodEntryHighlight sample) => sample.toJson())
         .toList(growable: false),
   };
 
+  /// Contains only the evidence used for AI insights and excludes private notes.
+  Map<String, Object> toAiMap() => <String, Object>{
+    MoodAnalysisPayloadKeys.correlations: _correlationsMap(),
+    MoodAnalysisPayloadKeys.entryHighlights: entryHighlights
+        .map((MoodEntryHighlight sample) => sample.toAiMap())
+        .toList(growable: false),
+  };
+
   String toJson() => jsonEncode(toMap());
+
+  Map<String, Object> _correlationsMap() => <String, Object>{
+    MoodAnalysisPayloadKeys.positiveTriggers: positiveTriggers
+        .map((MoodTriggerImpact impact) => impact.toJson())
+        .toList(growable: false),
+    MoodAnalysisPayloadKeys.negativeTriggers: negativeTriggers
+        .map((MoodTriggerImpact impact) => impact.toJson())
+        .toList(growable: false),
+  };
 }
 
 String _dateLabel(DateTime date) {

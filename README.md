@@ -17,6 +17,9 @@ MoodWiser is a Flutter app for recording mood check-ins.
 - The **Analysis JSON** section exposes a compact, structured payload. Raw
   journal entries are not sent to an AI model; qualitative synthesis can be
   added later using this payload.
+- `MoodAnalysis.toAiMap()` selects only trigger correlations and high/low
+  samples, and excludes journal notes. A Firebase callable-function scaffold
+  for optional Gemini insights is in [`functions/README.md`](./functions/README.md).
 
 ## Commit email notifications
 
